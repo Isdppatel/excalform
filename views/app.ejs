@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    
+    <title>Form</title>
+    <style>
+        .btn{
+            display:flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        input[type="submit"]
+        {
+          height: 30px;
+          font-size: 25px;
+          background-color: azure;
+          padding-bottom:4px;
+        }
+        input[type="submit"]:hover
+        {
+          cursor: pointer;
+          background-color:aliceblue
+        }
+        .title{
+            display: flex;
+            justify-content: center;
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/jobform" method="post">
+        <div class="title">Job Application</div>
+        <div class="container">
+            <!-- Basic Detail -->
+            <fieldset class="field_type">
+                <legend>Basic Detail:</legend>
+                <div class="div1">
+                    <table>
+                        <tr>
+                            <td> <label for="fname">First name:</label>
+                                <input type="text" id="fname" name="fname"><br><br>
+                            </td>
+                            <td> <label for="lname">Last name:</label>
+                                <input type="text" id="lname" name="lname"><br><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="Designation_id">Designation:</label>
+                                <input type="text" id="Designation_id" name="Designation"><br><br>
+                            </td>
+                            <td><label for="add1_id">Address 1:</label><br>
+                                <textarea id="add1_id" name="Address1" rows="2" cols="50">
+                                    </textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> <label for="email">Email:</label>
+                                <input type="email" id="email" name="email_name"><br><br>
+                            </td>
+                            <td><label for="add3_id">Address 2:</label><br>
+                                <textarea id="add2_id" name="Address2" rows="2" cols="50">
+                                    </textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="phone_id">Phone Number</label>
+                                <input type="text" name="phone_name" id="phone_id">
+                            </td>
+                            <td>
+                                <label for="state_id">State:</label>
+                                <select name="state_name" id="state_id" onchange="get_city(this)">
+                                    <option value="">select state</option>
+                                    <% for(let i=0;i< data_option.length;i++) { %>
+                                        <option value="<%=data_option[i].id%>" >
+                                            <%=data_option[i].state %>
+                                        </option>
+                                        <% } %>
+                                </select>
+                            </td>
+                            <td>
+                                <label for="city_id">City</label>
+                                <select name="city_name" id="city_id">
+                                    <option value="select city" selected > select city</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Gender : </label>&nbsp; &nbsp;
+                                <label for="gender_male"> Male </label> <input type="radio" name="gender" value="male"
+                                    id="gende_male">
+                                <label for="gender_female">Female </label><input type="radio" name="gender" value="female"
+                                    id="gender_female">
+                                <label for="gender_other">other </label><input type="radio" name="gender" value="other"
+                                    id="gender_other">
+                            </td>
+                            <td>
+                                <label for="zipcode">Zipcode</label>
+                                <input type="number" id="zipcode" name="zipcode_name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="RelationShip_id">RelationShip Status:</label>
+                                <select name="RelationShip" id="RelationShip_id">
+                                    <% for( let i=0;i< relation_option.length;i++) { %>
+                                        <option value="<%=relation_option[i].value%>">
+                                            <%=relation_option[i].value%>
+                                        </option>
+                                        <% } %>
+                                </select>
+                            </td>
+                            <td>
+                                <label for="date_id">DOB:</label>
+                                <input type="date" id="date_id" name="date_name">
+                            </td>
+                        </tr>
+
+                    </table>
+                   
+                </div>
+            </fieldset>
+            <br><br>
+            <div class="btn"><input type="submit" value="submit"></div>
+        </div>
+    </form>
+    <script>
+        var idx = 1;
+        // document.getElementById('clone_id1').insertAdjacentHTML('afterend',add_btn())
+        // add_btn();
+        function addbtn() {
+            const node = document.getElementById('clone_id2');
+            const clone = node.cloneNode(true);
+            document.getElementById('tb3').appendChild(clone);
+        }
+        function add_btn() {
+            const node = document.getElementById('clone_id1');
+            const clone = node.cloneNode(true);
+            document.getElementById('tb1').appendChild(clone);
+        }
+
+        
+        function add_ref() {
+            const node = document.getElementById('clone_id3');
+            const clone = node.cloneNode(true);
+
+            document.getElementById('tb6').appendChild(clone);
+
+            
+        }
+
+        async function get_city(ele)
+        {
+            // state id
+            console.log(ele.value);
+            var state_id=ele.value;
+
+            const select_state= await fetch(`http://localhost:8050/all/state/${state_id}`);
+            var cities_arr=await select_state.json();
+            // console.log(cities_arr);
+
+            var city = document.getElementById('city_id')
+            
+            city.innerHTML="";
+        
+            cities_arr.result.forEach(element => {
+                city.innerHTML+= `<option>${element.city_name}</option>`
+            });
+
+        }
+        
+        </script>
+</body>
+
+</html>
+
